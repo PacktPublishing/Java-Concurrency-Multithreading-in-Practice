@@ -20,9 +20,6 @@ public class Lesson5 {
 		System.out.println("Total apples picked: " + result);
 	}
 
-	public static class SomethingWentWrongException extends Exception {
-	}
-
 	public static class PickFruitTask extends RecursiveTask<Integer> {
 
 		private final AppleTree[] appleTrees;
@@ -39,11 +36,9 @@ public class Lesson5 {
 
 		@Override
 		protected Integer compute() {
-			// throw an exception for any task from the right side of the array
-			if (startInclusive >= treeNumber / 2) {
-				// try this: int throwException = 10/0;
-				// try this: throw new SomethingWentWrongException();
-				// try this: completeExceptionally(new SomethingWentWrongException());
+			 // throw an exception for any task from the right side of the array
+			if (startInclusive >= treeNumber/2) {
+
 			}
 			if (endInclusive - startInclusive < taskThreadshold) {
 				return doCompute();
@@ -54,15 +49,6 @@ public class Lesson5 {
 			PickFruitTask rightSum = new PickFruitTask(appleTrees, midpoint + 1, endInclusive);
 
 			rightSum.fork(); // computed asynchronously
-
-			try {
-				TimeUnit.MILLISECONDS.sleep(100);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// try this: rightSum.cancel(true);
 
 			return leftSum.compute()// computed synchronously: immediately and in the current thread
 					+ rightSum.join();

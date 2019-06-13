@@ -2,27 +2,29 @@ package com.packt.tfesenko.multithreading.section1;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
+import com.packt.tfesenko.multithreading.section1.Lesson3.PickFruitTask;
+
 public class Lesson4 {
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		AppleTree[] appleTrees = AppleTree.newTreeGarden(12);
-		PickFruitAction task = new PickFruitAction(appleTrees, 0, appleTrees.length - 1);
-
 		ForkJoinPool pool = ForkJoinPool.commonPool();
 
-		pool.invoke(task);
-		// try this: pool.execute(task); 
-		// try this: pool.execute(task); task.join();
-		// try this: pool.execute(task); pool.awaitTermination(10, TimeUnit.SECONDS);
+		long startTime = System.currentTimeMillis();
+		PickFruitAction task = new PickFruitAction(appleTrees, 0, appleTrees.length - 1);
+		int result = pool.invoke(task);
 
+		System.out.println("Total apples picked: " + result);
+		long endTime = System.currentTimeMillis();
 		System.out.println();
-		System.out.println("Done!");
+		System.out.println("Done in " + (endTime - startTime));
 	}
 
-	public static class PickFruitAction extends RecursiveAction {
+	public static class PickFruitAction extends RecursiveTask<Integer> {
 
 		private final AppleTree[] appleTrees;
 		private final int startInclusive;
@@ -37,10 +39,9 @@ public class Lesson4 {
 		}
 
 		@Override
-		protected void compute() {
+		protected Integer compute() {
 			if (endInclusive - startInclusive < taskThreadshold) {
-				doCompute();
-				return;
+				return doCompute();
 			}
 			int midpoint = startInclusive + (endInclusive - startInclusive) / 2;
 
@@ -48,14 +49,15 @@ public class Lesson4 {
 			PickFruitAction rightSum = new PickFruitAction(appleTrees, midpoint + 1, endInclusive);
 
 			rightSum.fork(); // computed asynchronously
-			leftSum.compute();// computed synchronously: immediately and in the current thread
-			rightSum.join();
+
+			return leftSum.compute()// computed synchronously: immediately and in the current thread
+					+ rightSum.join();
 		}
 
-		protected void doCompute() {
-			IntStream.rangeClosed(startInclusive, endInclusive)//
-					.forEach(i -> appleTrees[i].pickApples());
-
+		protected Integer doCompute() {
+			return IntStream.rangeClosed(startInclusive, endInclusive)//
+					.map(i -> appleTrees[i].pickApples())//
+					.sum();
 		}
 	}
 }

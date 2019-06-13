@@ -12,7 +12,7 @@ public class Lesson2 {
 	}
 
 	public static void demoSynchronized() throws InterruptedException {
-		int numberOfWorkers = 2;
+		int numberOfWorkers = 1;
 		ExecutorService service = Executors.newFixedThreadPool(numberOfWorkers);
 
 		Counter counter = new Counter();
@@ -30,38 +30,33 @@ public class Lesson2 {
 
 		private int value = 0;
 
-		public synchronized void increment() {
-			// Try this after removing "synchronized void"
-			// synchronized (this) {
-			// Also try this:
-			// synchronized (lock) {
+		public void increment() {
 			value++;
-			// }
 		}
 
-		public synchronized void decrement() {
+		public void decrement() {
 			value--;
 		}
 
-		public synchronized void synchronizedAddOne() {
+		public void synchronizedAddOne() {
 			value++;
 		}
 
 		public static void staticMethodCanBeSynchronizedToo() {
-			synchronized (Counter.class) {
 				System.out.println("A static method can be synchronized too");
-			}
 		}
 
-		public static synchronized void staticMethodCanBeSynchronizedToo2() {
+		public static void staticMethodCanBeSynchronizedToo2() {
 			System.out.println("A static method can be synchronized too");
 		}
 
-		public synchronized int getValue() {
+		public int getValue() {
 			return value;
 		}
 	}
 
+	
+	
 	public static void demoBlockedState() {
 		System.out.println();
 		final Object lock = new Object();

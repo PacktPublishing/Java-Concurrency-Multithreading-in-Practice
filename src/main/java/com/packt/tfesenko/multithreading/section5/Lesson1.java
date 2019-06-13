@@ -14,10 +14,8 @@ public class Lesson1 {
 		demoAtomicInteger();
 
 		// Atomic boolean in section 4
-		Lesson4.demoWaitNotify();
+		// Lesson4.demoWaitForGreenLight();
 
-		// Atomic integer usage in section 2
-		Lesson2.demoThreadFactory();
 	}
 
 	// Modification of
@@ -37,19 +35,18 @@ public class Lesson1 {
 	}
 
 	public static class Counter {
-		private AtomicInteger value = new AtomicInteger();// 0 is default
+		private int value = 0;
 
-		public void increment() {
-			value.incrementAndGet();
-			// this also works: value.addAndGet(1);
+		public synchronized void increment() {
+			value++;
 		}
 
-		public void decrement() {
-			value.decrementAndGet();
+		public synchronized void decrement() {
+			value--;
 		}
 
-		public int getValue() {
-			return value.get();
+		public synchronized int getValue() {
+			return value;
 		}
 	}
 

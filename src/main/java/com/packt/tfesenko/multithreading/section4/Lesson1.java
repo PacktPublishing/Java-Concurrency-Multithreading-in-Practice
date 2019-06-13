@@ -7,7 +7,7 @@ public class Lesson1 {
 	}
 
 	private static void demoThreadState() throws InterruptedException {
-		System.out.println("Main thread: " + Thread.currentThread().getState());
+		System.out.println("Main thread: ");
 		System.out.println();
 
 		Runnable sayHello = () -> {
@@ -15,23 +15,11 @@ public class Lesson1 {
 		};
 		Thread thread = new Thread(sayHello);
 
-		// nothing happens until the thread starts
-		System.out.println("After creation: " + thread.getState());
+		System.out.println("After creation: ");
 
-		thread.start();
-		System.out.println("After thread.start(): " + thread.getState());
-
-		// Wait until the second thread completes its execution either by sleeping or by
-		// joining
-		thread.join();
-		// or
-        try {
-			Thread.sleep(500, 0); // == TimeUnit.MILLISECONDS.sleep(1000)
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		System.out.println("After thread.start(): ");
         
-		System.out.println("When completed execution: " + thread.getState());
+		System.out.println("When completed execution: ");
 	}
 
 }

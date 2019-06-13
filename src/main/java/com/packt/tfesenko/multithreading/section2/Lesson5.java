@@ -9,24 +9,12 @@ import java.util.stream.Stream;
 public class Lesson5 {
 
 	public static void main(String[] args) {
-		Stream.of("One", "Two", "Three")
-				// to parallel stream
-				.parallel();
+		Stream.of("One", "Two", "Three");
 		
-		// Or, create directly from a list
-		List.of("January", "February", "March")
-		// parallelStream() instead of stream()
-		.parallelStream();
+		List.of("January", "February", "March");
 		
-		// array - parallel() from a stream  
 		String[] array = {"Coffee", "Capuccino", "Latte"};
-		Arrays.stream(array).parallel();
-		
-		// parallel reduction using/producing a concurrent map
-		ConcurrentMap<Object, List<String>> coffeeByFirstLetter = 
-				Arrays.stream(array).parallel()//
-				.collect(Collectors.groupingByConcurrent(drink->drink.charAt(0)));
-		System.out.println(coffeeByFirstLetter);
+		Arrays.stream(array);
 
 	}
 

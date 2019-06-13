@@ -19,10 +19,7 @@ public class Lesson4 {
 
 	private static void demoWaitNotifyWithMessageQueue() throws InterruptedException {
 		ExecutorService service = Executors.newFixedThreadPool(2);
-		// Try MessageQueueWithWaitNotify messageQueue = new MessageQueueWithWaitNotify();
-		
-		// Try MessageQueueWithLockConditions messageQueue = new MessageQueueWithLockConditions();
-
+	
 		BrokenMessageQueue messageQueue = new BrokenMessageQueue();
 
 		Runnable producer = () -> {
@@ -83,136 +80,23 @@ public class Lesson4 {
 
 	}
 
-	private static class MessageQueueWithWaitNotify {
-
-		private final int capacity = 2;
-
-		private final Queue<String> queue = new LinkedList<>();
-
-		public synchronized void send(String message) {
-			while (queue.size() == capacity) {
-				// wait until queue is not full
-				try {
-					wait();
-				} catch (InterruptedException e) {
-				}
-			}
-			queue.add(message);
-			notifyAll();
-		}
-
-		public synchronized String receive() {
-			while (queue.size() == 0) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-				}
-			}
-			String value = queue.poll();
-			notifyAll();
-			return value;
-		}
-
-	}
-
-	private static class MessageQueueWithLockConditions {
-
-		private final int capacity = 2;
-
-		private final Lock lock = new ReentrantLock();
-
-		/** true if ready to send/produce */
-		private final Condition queueNotFull = lock.newCondition();
-
-		/** true if ready to receive/consume */
-		private final Condition queueNotEmpty = lock.newCondition();
-
-		private final Queue<String> queue = new LinkedList<>();
-
-		public void send(String message) {
-			lock.lock();
-			try {
-				while (queue.size() == capacity) {
-					try {
-						queueNotFull.await();
-					} catch (InterruptedException e) {
-					}
-				}
-				queue.add(message);
-				queueNotEmpty.signalAll();
-			} finally {
-				lock.unlock();
-			}
-		}
-
-		public String receive() {
-			lock.lock();
-			try {
-				while (queue.size() == 0) {
-					try {
-						queueNotEmpty.await();
-					} catch (InterruptedException e) {
-					}
-				}
-				String value = queue.poll();
-				queueNotFull.signalAll();
-				return value;
-			} finally {
-				lock.unlock();
-			}
-		}
-
-	}
 	
-	private static void demoWaitForGreenLight() throws InterruptedException {
-		demoOnSpinWait();
-		demoWaitNotify();
-	}
-
-	private static void demoOnSpinWait() throws InterruptedException {
+	public static void demoWaitForGreenLight() throws InterruptedException {
 		final AtomicBoolean isGreenLight = new AtomicBoolean(false);
 
 		Runnable waitForGreenLightAndGo = () -> {
 			System.out.println("Waiting for the green light...");
 			while (!isGreenLight.get()) {
-				Thread.onSpinWait();
+				// just spin-wait
 			}
 			System.out.println("Go!!!");
 		};
 		new Thread(waitForGreenLightAndGo).start();
 
-		TimeUnit.MILLISECONDS.sleep(3000);
+		TimeUnit.MILLISECONDS.sleep(500);
 
 		// from the main thread:
 		isGreenLight.set(true);
-	}
-
-	public static void demoWaitNotify() throws InterruptedException {
-		final AtomicBoolean isGreenLight = new AtomicBoolean(false);
-
-		Object lock = new Object();
-
-		Runnable waitForGreenLightAndGo = () -> {
-			System.out.println("Waiting for the green light...");
-			synchronized (lock) {
-				while (!isGreenLight.get()) {
-					try {
-						lock.wait();
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-			System.out.println("Go!!!");
-		};
-		new Thread(waitForGreenLightAndGo).start();
-
-		TimeUnit.MILLISECONDS.sleep(3000);
-
-		// from the main thread:
-		synchronized (lock) {
-			isGreenLight.set(true);
-			lock.notify();
-		}
 	}
 
 }

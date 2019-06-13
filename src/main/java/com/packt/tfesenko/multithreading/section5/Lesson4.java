@@ -16,7 +16,7 @@ public class Lesson4 {
 		// For Java 8, use Arrays.asList(...)
 		List<String> initialElements = List.of("Ella", "Eclair", "Larry", "Felix");
 
-		List<String> cats = new CopyOnWriteArrayList<>(initialElements);
+		List<String> cats = new ArrayList<>(initialElements);
 
 		Runnable feedCats = () -> {
 			try {
@@ -30,8 +30,6 @@ public class Lesson4 {
 			}
 		};
 
-		scheduler.scheduleAtFixedRate(feedCats, 0, 100, TimeUnit.MILLISECONDS);
-
 		AtomicInteger communityCatNumber = new AtomicInteger(1);
 		// This will eventually cause a ConcurrentModificationException
 		Runnable adoptCommunityCat = () -> {
@@ -41,7 +39,6 @@ public class Lesson4 {
 				e.printStackTrace();
 			}
 		};
-		scheduler.scheduleAtFixedRate(adoptCommunityCat, 1, 1000, TimeUnit.MILLISECONDS);
 
 		TimeUnit.SECONDS.sleep(20);
 		scheduler.shutdown();

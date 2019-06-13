@@ -17,22 +17,10 @@ import java.util.concurrent.TimeUnit;
 public class Lesson3 {
 
 	public static void main(String[] args) {
-		
-		// Try this:
-		// SubmissionPublisher<WeatherForecast> weatherForecastPublisher = new OnDemandWeatherForecastPublisher();
-		
-		// Try this:
-		// SubmissionPublisher<WeatherForecast> weatherForecastPublisher = new SubmissionPublisher<>();
-
-		SubmissionPublisher<WeatherForecast> weatherForecastPublisher = new WeatherForecastPublisher();
+		SubmissionPublisher<WeatherForecast> weatherForecastPublisher = null;
 
 		weatherForecastPublisher.subscribe(new TwitterSubscriber());
 		weatherForecastPublisher.subscribe(new DatabaseSubscriber());
-
-		// Try this in combination with `weatherForecastPublisher = new SubmissionPiblisher<WeatherForecast>();`
-//		for (int i = 0; i < Long.MAX_VALUE; i++) {
-//			weatherForecastPublisher.submit(WeatherForecast.nextRandomWeatherForecast());
-//		}
 
 		// close the publisher and associated resources after 10 seconds
 		try {
@@ -40,34 +28,14 @@ public class Lesson3 {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		// Comment out when using OnDemandWeatherForecastPublisher which is not AutoClosable
-		weatherForecastPublisher.close();
+
 	}
 
 	/**
 	 * Modification of the example from JavaDoc for
 	 * java.util.concurrent.SubmissionPublisher<T>
 	 */
-	public static class WeatherForecastPublisher extends SubmissionPublisher<WeatherForecast> {
-		final ScheduledFuture<?> periodicTask;
-		final ScheduledExecutorService scheduler;
-
-		WeatherForecastPublisher() {
-			// Try this:
-			// super(Executors.newFixedThreadPool(2), Flow.defaultBufferSize());
-			scheduler = Executors.newScheduledThreadPool(1);
-			periodicTask = scheduler.scheduleAtFixedRate( //
-					// runs submit()
-					() -> submit(WeatherForecast.nextRandomWeatherForecast()), //
-					500, 500, TimeUnit.MILLISECONDS);
-		}
-
-		public void close() {
-			periodicTask.cancel(false);
-			scheduler.shutdown();
-			super.close();
-		}
-	}
+	public static class WeatherForecastPublisher extends SubmissionPublisher<WeatherForecast> {}
 
 	/**
 	 * Modifications of OneShotPublisher and OneShotSubscription from the documentation:
@@ -97,7 +65,7 @@ public class Lesson3 {
 			if (n > 0) {
 				for (int i = 0; i < n; i++) {
 					future = executor.submit(() -> {
-						subscriber.onNext(WeatherForecast.nextRandomWeatherForecast());
+						// TODO add logic
 					});
 				}
 			} else if (n < 0) {

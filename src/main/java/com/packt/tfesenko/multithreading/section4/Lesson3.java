@@ -28,70 +28,27 @@ public class Lesson3 {
 	}
 
 	public static class Counter {
-		// Try this:
-		// private final Lock lock = new ReentrantLock();
-
-		private final ReadWriteLock lock = new ReentrantReadWriteLock();
-		private final Lock readLock = lock.readLock();
-		private final Lock writeLock = lock.writeLock();
+		private final Object lock = new Object();
 
 		private int value = 0;
 
 		public void increment() {
-			writeLock.lock();
-			try {
+			synchronized (lock) {
 				value++;
-			} finally {
-				// make sure to unlock!!!!!
-				writeLock.unlock();
 			}
 		}
 
 		public void decrement() {
-			writeLock.lock();
-			try {
+			synchronized (lock) {
 				value--;
-			} finally {
-				// make sure to unlock!!!!!
-				writeLock.unlock();
-			}
-		}
-
-		/**
-		 * tryLock()
-		 */
-		public void tryIncrement() {
-			if (writeLock.tryLock()) {
-				try {
-					value++;
-				} finally {
-					// make sure to unlock!!!!!
-					writeLock.unlock();
-				}
-			} else {
-				System.out.println("Whatever... I tried");
 			}
 		}
 
 		public int getValue() {
-			readLock.lock();
-			try {
+			synchronized (lock) {
 				return value;
-			} finally {
-				readLock.unlock();
-			}
-		}
-
-		public String getBinaryValue() {
-			readLock.lock();
-			try {
-				return Integer.toBinaryString(value);
-			} finally {
-				readLock.unlock();
 			}
 		}
 
 	}
-	
-
 }

@@ -14,12 +14,6 @@ public class Lesson4 {
 	public static void main(String[] args) {
 		SubmissionPublisher<WeatherForecast> weatherForecastPublisher = new WeatherForecastPublisher();
 
-		weatherForecastPublisher.subscribe(new DatabaseSubscriber());
-		weatherForecastPublisher.subscribe(new TwitterSubscriber<WeatherForecast>());
-
-		Flow.Processor<WeatherForecast, MetricWeatherForecast> metricConverter = new UsToMetricProcessor();
-		weatherForecastPublisher.subscribe(metricConverter);
-		metricConverter.subscribe(new TwitterSubscriber<MetricWeatherForecast>());
 
 		// close the publisher and associated resources after 10 seconds
 		try {
@@ -30,33 +24,6 @@ public class Lesson4 {
 		weatherForecastPublisher.close();
 	}
 
-	public static class UsToMetricProcessor extends SubmissionPublisher<MetricWeatherForecast>
-			implements Flow.Processor<WeatherForecast, MetricWeatherForecast> {
-
-		private Flow.Subscription subscription;
-
-		@Override
-		public void onSubscribe(Flow.Subscription subscription) {
-			this.subscription = subscription;
-			subscription.request(1);
-		}
-
-		@Override
-		public void onNext(WeatherForecast item) {
-			submit(MetricWeatherForecast.fromImperial(item));
-			subscription.request(1);
-		}
-
-		@Override
-		public void onError(Throwable e) {
-			e.printStackTrace();
-		}
-
-		@Override
-		public void onComplete() {
-			close();
-		}
-	}
 
 	public static class MetricWeatherForecast {
 

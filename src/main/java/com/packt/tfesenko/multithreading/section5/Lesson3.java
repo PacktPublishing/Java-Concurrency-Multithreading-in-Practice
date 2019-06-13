@@ -15,8 +15,8 @@ import java.util.function.Function;
 public class Lesson3 {
 
 	public static void main(String[] args) throws InterruptedException {
-		// demoBlockingQueue();
-		demoMessageQueue();
+		demoBlockingQueue();
+		//demoMessageQueue();
 	}
 
 	// Modification of
@@ -25,7 +25,7 @@ public class Lesson3 {
 		Random random = new Random();
 		ExecutorService service = Executors.newCachedThreadPool();
 
-		BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+		Queue<String> queue = new ConcurrentLinkedQueue<>();
 		Consumer<String> joinQueue = (name) -> {
 			try {
 				TimeUnit.MILLISECONDS.sleep(random.nextInt(1000));
@@ -42,7 +42,7 @@ public class Lesson3 {
 
 		Runnable dequeue = () -> {
 			try {
-				System.out.println("poll(): " + queue.take());
+				System.out.println("poll(): " + queue.poll());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -99,19 +99,36 @@ public class Lesson3 {
 
 	}
 
-	// MessageQueue implemented with BlockingQueue
 	private static class MessageQueue {
 
-		private final LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>(2);
+		private final int capacity = 2;
 
-		public void send(String message) {
+		private final Queue<String> queue = new LinkedList<>();
+
+		public synchronized void send(String message) {
+			while (queue.size() == capacity) {
+				// wait until queue is not full
+				try {
+					wait();
+				} catch (InterruptedException e) {
+				}
+			}
 			queue.add(message);
+			notifyAll();
 		}
 
-		public String receive() throws InterruptedException {
-			String value = queue.take();
+		public synchronized String receive() {
+			while (queue.size() == 0) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+				}
+			}
+			String value = queue.poll();
+			notifyAll();
 			return value;
 		}
 
 	}
+
 }

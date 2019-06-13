@@ -18,25 +18,25 @@ public class Lesson4 {
 		// 2. Optional: Intermediate Operation aka Transformation
 		// 3. Terminal Operation aka Action
 
-		demoStreamOf();
+//		demoStreamOf();
 		demoListToStream();
-		demoArrayToStream();
-		demoRange();
-		demoIntermediateOperationsAreLazy();
+//		demoArrayToStream();
+//		demoRange();
+//		demoIntermediateOperationsAreLazy();
 	}
 
 	public static void demoListToStream() {
 		System.out.println("Cat count (List): ");
 
 		// List.of() was introduced in Java 9, use Arrays.asList for earlier versions
-		List<String> catsList = List.of("Fluffy, the cat", // cat
+		List<String> petList = List.of("Fluffy, the cat", // cat
 				"Caesar, the dog", //
 				"Eclair, the cat", // cat
 				"Ella, the dog", //
 				"Spots, the cat"// cat
 		);
 		int catCountOld = 0;
-		for (String cat : catsList) {
+		for (String cat : petList) {
 			if (cat.endsWith("the cat")) {
 				catCountOld++;
 			}
@@ -45,23 +45,13 @@ public class Lesson4 {
 		System.out.println(catCountOld);
 
 		// Create a stream: from a list
-		long catCount = catsList.stream()
-
-				// filter() is an _intermediate_ operation
-				.filter(pet -> pet.endsWith("the cat"))
-
-				// count() is a _terminal_ operation
-				.count();
-
-		System.out.print("\t");
-		System.out.println(catCount);
 		System.out.println();
 	}
 
 	public static void demoArrayToStream() {
 		System.out.println("Cat count (Array): ");
 
-		String[] cats = { "Fluffy, the cat", // cat
+		String[] petsArray = { "Fluffy, the cat", // cat
 				"Caesar, the dog", //
 				"Eclair, the cat", // cat
 				"Ella, the dog", //
@@ -69,7 +59,7 @@ public class Lesson4 {
 		};
 
 		int catCountOld = 0;
-		for (String cat : cats) {
+		for (String cat : petsArray) {
 			if (cat.endsWith("the cat")) {
 				catCountOld++;
 			}
@@ -78,34 +68,18 @@ public class Lesson4 {
 		System.out.println(catCountOld);
 
 		// Create a stream: from a list
-		long catCount = Arrays.stream(cats) //
-
-				// filter() is an _intermediate_ operation
-				.filter(pet -> pet.endsWith("the cat"))
-
-				// count() is a _terminal_ operation
-				.count();
-
-		System.out.print("\t");
-		System.out.println(catCount);
 		System.out.println();
 	}
 
 	public static void demoStreamOf() {
 		System.out.println("Cat count (Stream.of)");
 		// Create a stream
-		long catCount = Stream.of(//
-				"Fluffy, the cat", // cat
-				"Caesar, the dog", //
-				"Eclair, the cat", // cat
-				"Ella, the dog", //
-				"Spots, the cat"// cat
-		)//
-			// filter() is an _intermediate_ operation
-				.filter(pet -> pet.endsWith("the cat"))
-				// count() is a _terminal_ operation
-				.count();
-		System.out.println("\t" + catCount);
+//				"Fluffy, the cat", // cat
+//				"Caesar, the dog", //
+//				"Eclair, the cat", // cat
+//				"Ella, the dog", //
+//				"Spots, the cat"// cat
+
 		System.out.println();
 	}
 
@@ -126,11 +100,6 @@ public class Lesson4 {
 		// the same with streams
 		System.out.print("\t");
 
-		// Note that this is an IntStream - a stream of _unboxed_ int type
-		int sumWithStream = IntStream.range(startIndex, endIndex)//
-				.map(i -> array[i])//
-				.sum();
-		System.out.println(sumWithStream);
 		System.out.println();
 	}
 
@@ -138,17 +107,7 @@ public class Lesson4 {
 		int[] array = generateArrayWithRandomNumbers(1000);
 
 		System.out.println("Print elements of an array:");
-		IntStream.range(0, 1000)//
-				.map(i -> {
-					System.out.println(array[i]);
-					return array[i];
-				});
-		// try commenting next line
-		// .sum();
 
-		// Solution: use forEach() - a terminal operation
-		IntStream.range(0, 1000)//
-				.forEach(i -> System.out.println(array[i]));
 		System.out.println();
 	}
 

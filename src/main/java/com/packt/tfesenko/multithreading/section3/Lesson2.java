@@ -16,68 +16,9 @@ public class Lesson2 {
 	public static void main(String[] args) {
 		SubmissionPublisher<WeatherForecast> weatherForecastPublisher = new WeatherForecastPublisher();
 		
-		Subscriber<WeatherForecast> twitterSubscriber = new Flow.Subscriber<WeatherForecast>() {
-			private Flow.Subscription subscription;
-			private final String name = "Twitter Subscriber";
-
-			@Override
-			public void onSubscribe(Subscription subscription) {
-				System.out.println(name + " subscribed!");
-				this.subscription = subscription;
-				subscription.request(1);
-			}
-
-			@Override
-			public void onNext(WeatherForecast weatherForecast) {
-				System.out.println(Thread.currentThread().getName() + " > Twitting: " + weatherForecast);
-				// You can alternatively use subscription.request(Long.MAX_VALUE) in onSubscribe()
-				subscription.request(1);
-			}
-
-			@Override
-			public void onError(Throwable throwable) {
-				System.err.println(name + " got an error: " + throwable.getMessage());
-			}
-
-			@Override
-			public void onComplete() {
-				System.out.println(name + " completed.");
-			}
-		};
+		Subscriber<WeatherForecast> twitterSubscriber = null;
 
 		weatherForecastPublisher.subscribe(twitterSubscriber);
-
-		weatherForecastPublisher.subscribe(new Flow.Subscriber<WeatherForecast>() {
-			private Flow.Subscription subscription;
-			private final String name = "Database Subscriber";
-
-			@Override
-			public void onSubscribe(Subscription subscription) {
-				System.out.println(name + " subscribed!");
-				this.subscription = subscription;
-				subscription.request(1);
-			}
-
-			@Override
-			public void onNext(WeatherForecast weatherForecast) {
-				System.out.println(Thread.currentThread().getName() + " > Saving to DB: " + weatherForecast);
-
-				try {
-					TimeUnit.MILLISECONDS.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				subscription.request(1);
-			}
-
-			@Override
-			public void onError(Throwable throwable) {
-			}
-
-			@Override
-			public void onComplete() {
-			}
-		});
 
 		// close the publisher and associated resources after 10 seconds
 		try {

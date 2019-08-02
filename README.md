@@ -38,7 +38,7 @@ Recommended Hardware Requirements
 <LI> Storage: 2GB or more </LI></UL>
 
 <UL>
-<LI> Software Requirements
+Software Requirements
 <LI> Operating system: Windows, Mac, or Linux
 <LI> Java IDE of your choice, e.g. Eclipse or IntelliJ IDEA
 <LI> Java 8+ installed </LI> </UL>

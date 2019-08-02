@@ -22,7 +22,7 @@ By the end of this practical training course, you will have the knowledge to wri
 If you are a Java developer keen to learn how to write modern parallel and concurrent programs to improve application performance, this course is for you. Some basic workable knowledge of Java is assumed.
 ### Technical Requirements
 <UL>
-Minimum Hardware Requirements
+<B> Minimum Hardware Requirements </B>
 <LI> For successful completion of this course, students will require the computer systems with at least the following:
 <LI> OS: Windows 7 and above
 <LI> Processor: 1.4 GHz 32-bit (x86)
@@ -30,7 +30,7 @@ Minimum Hardware Requirements
                <LI> Storage: 2GB </LI></UL>
 
 <UL>
-Recommended Hardware Requirements
+<B> Recommended Hardware Requirements </B>
 <LI> For an optimal experience with hands-on labs and other practical activities, we recommend the following configuration:
 <LI> OS: Windows 10
 <LI> Processor: Dual Core 1.8Ghz (64-bit) or better configuration
@@ -38,7 +38,7 @@ Recommended Hardware Requirements
 <LI> Storage: 2GB or more </LI></UL>
 
 <UL>
-Software Requirements
+<B> Software Requirements </B>
 <LI> Operating system: Windows, Mac, or Linux
 <LI> Java IDE of your choice, e.g. Eclipse or IntelliJ IDEA
 <LI> Java 8+ installed </LI> </UL>

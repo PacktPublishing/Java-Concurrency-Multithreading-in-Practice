@@ -21,7 +21,7 @@ public class Lesson3 {
 		for (int i = 0; i < 10_000; i++) {
 			service.submit(() -> counter.increment());
 		}
-
+		service.shutdown();
 		service.awaitTermination(1000, TimeUnit.MILLISECONDS);
 
 		System.out.println("Increment 10_000 times: " + counter.getValue());
